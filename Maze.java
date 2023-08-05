@@ -17,8 +17,28 @@ public class Maze {
 		tiles = new Tile[width*height];
 		Arrays.fill(tiles, Tile.EMPTY);
 		
-		
 		playerIndex = playerPos;
+	}
+	
+	/**
+	 * Takes an array of chars and sets each tile in tiles based
+	 * based on the following conversion table:
+	 *   - char E == Tile.EMPTY
+	 *   - char W == Tile.WALL
+	 */
+	public void setAllTiles(char[] tilesAsCharArray) {
+		if (tilesAsCharArray.length != tiles.length){
+			throw new IllegalArgumentException("mismatched array length");
+		}
+		
+		for (int i = 0; i < tilesAsCharArray.length; i++) {
+			if (tilesAsCharArray[i] == 'E') { // Empty
+				tiles[i] = Tile.EMPTY;
+			}
+			else if (tilesAsCharArray[i] == 'W') {
+				tiles[i] = Tile.WALL;
+			}
+		} 
 	}
 	
 	public void setTile(int x, int y, Tile tile) {
@@ -28,6 +48,7 @@ public class Maze {
 	public Tile getTile(int x, int y) {
 		return tiles[y * width + x];
 	}
+	
 	
 	/**
 	 * Conversion equation from 2D coordinate to single int index system
@@ -56,6 +77,35 @@ public class Maze {
 	public String getPlayerPosition() {
 		String s = "(" + ((int) playerIndex/width) + ", " + (playerIndex % width) + ")";
 		return s;
+	}
+	
+	/**
+	 * Creates a (string) 2D representation of the maze map
+	 *
+	 */
+	public String toStringMapGraph() {
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < tiles.length; i++) {
+			
+			// new line to seperate rows, space to seperate columns
+			if (i != 0 && i % width == 0) {
+				s.append("\n");
+			}
+			else if (i != 0) {
+				s.append(" ");
+			}
+			
+			switch (tiles[i]) {
+				case WALL:
+					s.append("W");
+					break;
+				case EMPTY:
+					s.append("E");
+					break;
+			}
+		}
+		
+		return s.toString();
 	}
 	
 	public String toString() {
