@@ -1,8 +1,8 @@
 import java.util.Arrays;
 public class Maze {
 	
-	private enum Tile { WALL, EMPTY };
 	private Tile[] tiles;  // A 2D maze can be kept as a 1D array due to currentIndex
+	private int startIndex;
 	private int playerIndex;  // (y * width + x) turns a 2D coordinate into an array Index!
 	private int width;
 	private int height;
@@ -41,14 +41,28 @@ public class Maze {
 		} 
 	}
 	
-	public void setTile(int x, int y, Tile tile) {
-		tiles[y * width + x] = tile;
+	public Tile getTile(int index) {
+		return tiles[index];
 	}
 	
 	public Tile getTile(int x, int y) {
 		return tiles[y * width + x];
 	}
 	
+	public void setTile(int x, int y, Tile tile) {
+		tiles[y * width + x] = tile;
+	}
+	
+	/**
+	 * Sets the specified index in tiles to be of type tile
+	 */
+	public void setTile(int index, Tile tile) {
+		if (index < 0 || index >= tiles.length) {
+			throw new IndexOutOfBoundsException();
+		}
+		
+		tiles[index] = tile;
+	}
 	
 	/**
 	 * Conversion equation from 2D coordinate to single int index system
@@ -83,7 +97,7 @@ public class Maze {
 	 * Creates a (string) 2D representation of the maze map
 	 *
 	 */
-	public String toStringMapGraph() {
+	public String toStringMap() {
 		StringBuilder s = new StringBuilder();
 		for (int i = 0; i < tiles.length; i++) {
 			
