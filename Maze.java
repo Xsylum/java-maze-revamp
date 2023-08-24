@@ -32,11 +32,17 @@ public class Maze {
 		}
 		
 		for (int i = 0; i < tilesAsCharArray.length; i++) {
-			if (tilesAsCharArray[i] == 'E') { // Empty
+			char currentChar = tilesAsCharArray[i];
+			
+			if (currentChar == 'E') { // Empty
 				tiles[i] = Tile.EMPTY;
 			}
-			else if (tilesAsCharArray[i] == 'W') {
+			else if (currentChar == 'W') {
 				tiles[i] = Tile.WALL;
+			}
+			else if (currentChar == 'S') {
+				tiles[i] = Tile.START;
+				startIndex = i;
 			}
 		} 
 	}
@@ -62,6 +68,22 @@ public class Maze {
 		}
 		
 		tiles[index] = tile;
+	}
+	
+	public int getStartIndex() {
+		return startIndex;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
+	public int getMazeSize() {
+		return tiles.length;
 	}
 	
 	/**
@@ -115,6 +137,9 @@ public class Maze {
 					break;
 				case EMPTY:
 					s.append("E");
+					break;
+				case START:
+					s.append("S");
 					break;
 			}
 		}
