@@ -34,7 +34,7 @@ public class Maze {
 		for (int i = 0; i < tilesAsCharArray.length; i++) {
 			char currentChar = tilesAsCharArray[i];
 			
-			if (currentChar == 'E') { // Empty
+			if (currentChar == 'O') { // Empty
 				tiles[i] = Tile.EMPTY;
 			}
 			else if (currentChar == 'W') {
@@ -43,6 +43,10 @@ public class Maze {
 			else if (currentChar == 'S') {
 				tiles[i] = Tile.START;
 				startIndex = i;
+			}
+			else if (currentChar == 'F') 
+			{
+				tiles[i] = Tile.FINISH;
 			}
 		} 
 	}
@@ -136,11 +140,17 @@ public class Maze {
 					s.append("W");
 					break;
 				case EMPTY:
-					s.append("E");
+					s.append("O"); // "Open"
 					break;
 				case START:
 					s.append("S");
 					break;
+				case TRAVELLED:
+					s.append("X"); // Opposite of O
+					break;
+				case FINISH:
+					s.append("F");
+					
 			}
 		}
 		
