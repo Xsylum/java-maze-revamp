@@ -1,13 +1,21 @@
+import java.util.LinkedList;
+
+
+/**
+
+ The maze should really be copied, not overwritten!
+*/
 public class MazeController {
 	
 	Maze maze;
-	List<Integer> branches;
+	LinkedList<Integer> branches;
 	private int currentTile;
 	// NEED TO CODE A LIST, ARRAY WON'T WORK
 	
 	public MazeController (Maze maze) {
 		this.maze = maze;
 		currentTile = maze.getStartIndex();
+		branches = new java.util.LinkedList<Integer>();
 	}
 	
 	public int getCurrentTile() {
@@ -62,7 +70,7 @@ public class MazeController {
 		
 		Tile targetTile = maze.getTile(targetIndex);
 		
-		if (targetTile == Tile.EMPTY) {
+		if (targetTile == Tile.EMPTY || targetTile == Tile.FINISH) {
 			return true;
 		}
 		return false;
@@ -71,7 +79,7 @@ public class MazeController {
 	/**
 	 * changes current tile to the input index.
 	 * essentially it allows jumping anywhere in the maze, useful
-	 * for returning to branches once a path has been explored
+	 * for returning to branches once a path has been travelled
 	 *
 	 * Presumption: the index entered is not a WALL tile in maze
 	 */
@@ -82,8 +90,55 @@ public class MazeController {
 	/**
 	 * 
 	 */
-	public void AutomatedSolver() {
-		int branchCount;  // How many branches found from currentTile
+	public boolean AutomatedSolver() {
+		
+		// First check if last move brought us to the finish!
+		if (maze.getTile(currentTile) == Tile.FINISH) {
+			System.out.println("Finish tile at index: " + currentTile + " has been reached, congratulations!");
+			return true;
+		}
+		
+		int nextTile = -1; // The next tile that will be travelled
+		if (canMove("right")) {
+			nextTile = currentTile + 1;
+		}
+		if (canMove("down")) {
+			if (nextTile == -1) {
+				nextTile = currentTile + maze.getWidth();
+			}
+			else {
+				branches.add(currentTile + maze.getWidth());
+			}
+		}
+		if (canMove("left")) {
+			if (nextTile == -1) {
+				nextTile = currentTile - 1;
+			}
+			else {
+				branches.add(currentTile + maze.getWidth());
+			}
+		}
+		if (canMove("up")) {
+			if (nextTile == -1) {
+				nextTile = currentTile - maze.getWidth();
+			}
+			else {
+				branches.add(currentTile - maze.getWidth());
+			}
+		}
+		
+		if (nextTile == -1) {
+			if (branches.isEmpty()) {
+				throw new IllegalStateException("No start-to-finish route using given maze configuration!");
+			}
+			
+			nextTile = branches.remove(0);
+			System.out.println("MazeControlled DEBUG: jumping to " + nextTile);
+		}
+		
+		maze.setTile(currentTile, Tile.TRAVELLED);
+		currentTile = nextTile;
+		return false;
 	}
 	
 }
